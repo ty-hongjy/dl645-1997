@@ -1,0 +1,30 @@
+{
+  "name": "dl645-1997",
+  "version": "1.0.0",
+  "description": "dl645-1997 comunication protocal for meter",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": [],
+  "author": "hongjy",
+  "license": "ISC",
+  "dependencies": {
+    "@serialport/parser-byte-length": "^13.0.0",
+    "await-to-js": "^3.0.0",
+    "cors": "^2.8.5",
+    "lodash": "^4.17.21",
+    "lodash-cli": "^4.17.5",
+    "log4js": "^6.9.1",
+    "serialport": "^13.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@stylistic/eslint-plugin": "^5.5.0",
+    "@types/node": "^24.10.0",
+    "@types/serialport": "^13.0.0"
+
+  }
+}
