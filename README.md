@@ -1,11 +1,11 @@
 <!--
  * @Description: 
- * @Autor: name
+ * @Autor: hongjy
  * @Date: 2025-12-24 09:08:31
  * @LastEditors: name
- * @LastEditTime: 2025-12-25 16:13:57
+ * @LastEditTime: 2025-12-25 16:58:16
 -->
-# dl645-1997
+# dl645-1997 协议解析库
 国标电表DL645-1997通讯协议,typescript实现，包括核心部分设测试案例
 通用版：支持保电/取消保电解析+命令生成、ABC相有功功率、电表余额、基础电参数
 核心功能：、保电状态解析、保电控制命令生成
@@ -14,12 +14,12 @@
 
 | 方法 | 作用 | 示例 |
 |------|------|------|
-|buildSwitchCommand|	生成开合闸命令	|控制电表开关，0x01 = 合闸、0x02 = 分闸|
 |buildReadCommand|	生成读数据命令	|读取电能、电压、电流等电参数|
 |buildWriteCommand|	生成通用写数据命令	|向电表写入任意配置 / 控制指令。写数据命令：可基于buildReadCommand逻辑扩展buildWriteCommand方法，只需在数据域中添加 "数据标识 + 待写入值"；|
-|buildBroadcastCommand|	生成广播命令	|广播校时、广播参数设置
 |processAddress|	处理电表地址（反码 + 逆序）|	内部方法，自动处理地址格式|
 |calculateChecksum|	计算校验码|	内部方法，保证命令帧合法性|
+|buildSwitchCommand|	生成开合闸命令	|控制电表开关，0x01 = 合闸、0x02 = 分闸|
+|buildBroadcastCommand|	生成广播命令	|广播校时、广播参数设置
 
 # 命令使用规则
 指令规则：0x01 = 合闸、0x02 = 分闸、0x00 = 查询状态（DL645-1997 扩展规约通用）；
@@ -31,12 +31,15 @@
 电表兼容性：部分厂家电表的开关控制数据标识可能非标（如000F0200），需根据电表手册调整DL645DataId.SWITCH_CONTROL；
 权限验证：多数电表的开合闸命令需要密码验证，若需添加密码，可扩展buildSwitchCommand方法，在数据域中补充密码字节：
 
-
 扩展buildSwitchCommand方法，在数据域中补充密码字节
 示例：添加密码（123456）的合闸命令数据域
 const switchValueBuffer = Buffer.from([0x01, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36]); // 合闸+密码
 
-# meterSerialClient
+# 测试案例：
+97-dou-ctl-1.ts 测试案例，生成并发送命令帧到电表
+97-dou-ctl-s.ts 测试案例，生成并发送命令帧到电表,适配真实电表地址000048604296生成正确命令，通过串口调试工具查看命令帧
+
+# meterSerialCliente 串口测试
 seriel 串口 测试，发送读取命令 + 接收并解析电表返回结果
 flowchart TD
     A[创建MeterSerialClient实例] --> B[调用open()打开串口]
