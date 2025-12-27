@@ -2,7 +2,7 @@
 import { SerialPort } from 'serialport';
 // import { ByteLengthParser } from '@serialport/parser-byte-length';
 import { DelimiterParser } from '@serialport/parser-delimiter';
-import DL645_1997_Core,  {DL645DataId, DL645ControlCode,DL645ParseResult } from './97-dou-ctl-4';
+import DL645_1997_Core,  {DL645DataId, DL645ControlCode,DL645ParseResult } from './dl645-1997';
 
 // ====================== 串口通信核心类 ======================
 export class MeterSerialClient {

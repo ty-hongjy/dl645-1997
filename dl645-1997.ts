@@ -344,7 +344,7 @@ const reversedSegments = segments.reverse();
 
 parse(frameBuffer: Buffer): DL645ParseResult {
     // 基础校验
-    if (frameBuffer.length < 13 {
+    if (frameBuffer.length < 13) {
       return { valid: false, error: '帧长度不足（最小13字节）' };
     }
 
@@ -594,7 +594,7 @@ parse(frameBuffer: Buffer): DL645ParseResult {
     const dataLen = dataIdBuffer.length;
 
     // 计算校验码
-    const checksum = this.calculateChecksum(addressBuffer, controlCode, dataField);
+    const checksum = this.calculateChecksum(addressBuffer, controlCode,dataLen, dataField);
     frameParts.push(Buffer.from([checksum])); // 校验码
     frameParts.push(Buffer.from([0x16])); // 结束符
 
