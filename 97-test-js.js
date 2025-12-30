@@ -5,11 +5,15 @@
 // import dl645_1997_1, { DL645DataId, DL645ControlCode, SwitchCommand } from './dl645-1997.js';
 // const { default: dl645_1997_1, DL645DataId, DL645ControlCode, SwitchCommand } = require('./dl645-1997.js');
 // const {  DL645_1997_core, DL645DataId, DL645ControlCode, SwitchCommand } = require('./dl645-1997.js');
-const DL645_1997_core = require('./dl645-1997.js')
+// const DL645_1997_core = require('./dl645-1997.js')
+
+const DL645_1997_Core = require('./dl645-1997.js').default; // 核心类是默认导出，需取 .default
+const { DL645DataId,DL645ControlCode, PowerProtectCommand,SwitchCommand  } = require('./dl645-1997.js'); // 手动提取命名导出（核心代码已导出，仅注释未解除，后面会处理）
+
 // import  {  SwitchCommand } from './97-dou-ctl-2';
 // import DL645_1997_CommandBuilder from './dl645-command-builder';
 // 2. 实例化
-const builder = DL645_1997_core;
+const builder =new DL645_1997_Core(false);
 // const builder = new DL645_1997_core();
 // const builder = new dl645_1997_1.default();
 // 3. 生成读A相电压命令
@@ -28,10 +32,10 @@ else {
 // ====================== 测试示例 ======================
 if (require.main === module) {
     // 实例化命令生成器
-    const commandBuilder = new dl645_1997_1.default();
+    const commandBuilder = new DL645_1997_Core(false);
     // 示例1：生成读"总有功电能"命令
     const meterAddress = '000048604296'; // 电表地址（12位16进制）
-    const dataId = dl645_1997_1.DL645DataId.TOTAL_ACTIVE_ENERGY; // 总有功电能数据标识
+    const dataId = DL645DataId.TOTAL_ACTIVE_ENERGY; // 总有功电能数据标识
     const readCommand = commandBuilder.buildReadCommand(meterAddress, dataId);
     console.log('=== 读总有功电能命令 ===');
     if (readCommand.success) {
@@ -45,7 +49,7 @@ if (require.main === module) {
     }
     // 示例2：生成广播校时命令（简化版，仅演示）
     const timeData = Buffer.from([0x25, 0x08, 0x12, 0x05, 0x06, 0x24]); // 2025-08-12 05:06:24
-    const broadcastCommand = commandBuilder.buildBroadcastCommand(dl645_1997_1.DL645ControlCode.WRITE_DATA, timeData);
+    const broadcastCommand = commandBuilder.buildBroadcastCommand(DL645ControlCode.WRITE_DATA, timeData);
     console.log('\n=== 广播校时命令 ===');
     if (broadcastCommand.success) {
         console.log('命令16进制（带空格）：', broadcastCommand.commandHexWithSpace);
@@ -55,10 +59,10 @@ if (require.main === module) {
 // ====================== 测试示例 ======================
 if (require.main === module) {
     // 实例化命令生成器
-    const commandBuilder = new dl645_1997_1.default();
+    const commandBuilder = new DL645_1997_Core(false);
     const meterAddress = '000048604296'; // 测试电表地址
     // 示例1：生成合闸命令
-    const closeCommand = commandBuilder.buildSwitchCommand(meterAddress, dl645_1997_1.SwitchCommand.CLOSE);
+    const closeCommand = commandBuilder.buildSwitchCommand(meterAddress, SwitchCommand.CLOSE);
     console.log('=== 合闸控制命令 ===');
     if (closeCommand.success) {
         console.log('命令16进制（带空格）：', closeCommand.commandHexWithSpace);
@@ -68,7 +72,7 @@ if (require.main === module) {
         console.error('合闸命令生成失败：', closeCommand.error);
     }
     // 示例2：生成分闸命令
-    const openCommand = commandBuilder.buildSwitchCommand(meterAddress, dl645_1997_1.SwitchCommand.OPEN);
+    const openCommand = commandBuilder.buildSwitchCommand(meterAddress, SwitchCommand.OPEN);
     console.log('\n=== 分闸控制命令 ===');
     if (openCommand.success) {
         console.log('命令16进制（带空格）：', openCommand.commandHexWithSpace);
@@ -78,13 +82,13 @@ if (require.main === module) {
         console.error('分闸命令生成失败：', openCommand.error);
     }
     // 示例3：查询开关状态命令
-    const querySwitchCommand = commandBuilder.buildSwitchCommand(meterAddress, dl645_1997_1.SwitchCommand.QUERY);
+    const querySwitchCommand = commandBuilder.buildSwitchCommand(meterAddress, SwitchCommand.QUERY);
     console.log('\n=== 查询开关状态命令 ===');
     if (querySwitchCommand.success) {
         console.log('命令16进制（带空格）：', querySwitchCommand.commandHexWithSpace);
     }
     // 示例4：原有读数据命令（兼容）
-    const readEnergyCommand = commandBuilder.buildReadCommand(meterAddress, dl645_1997_1.DL645DataId.TOTAL_ACTIVE_ENERGY);
+    const readEnergyCommand = commandBuilder.buildReadCommand(meterAddress, DL645DataId.TOTAL_ACTIVE_ENERGY);
     console.log('\n=== 读总有功电能命令 ===');
     if (readEnergyCommand.success) {
         console.log('命令16进制（带空格）：', readEnergyCommand.commandHexWithSpace);
@@ -93,17 +97,17 @@ if (require.main === module) {
 // ====================== 测试示例 ======================
 if (require.main === module) {
     // 实例化命令生成器
-    const commandBuilder = new dl645_1997_1.default();
+    const commandBuilder = new DL645_1997_Core(false);
     const meterAddress = '000048604296'; // 测试电表地址
     // 3. 生成启用保电命令
-    const enableCmd = commandBuilder.buildPowerProtectCommand(meterAddress, dl645_1997_1.PowerProtectCommand.ENABLE);
+    const enableCmd = commandBuilder.buildPowerProtectCommand(meterAddress, PowerProtectCommand.ENABLE);
     if (enableCmd.success) {
         console.log('保电命令Buffer：', enableCmd.frameBuffer); // 串口直接发送
     }
     // 4. 生成取消保电命令
-    const disableCmd = commandBuilder.buildPowerProtectCommand(meterAddress, dl645_1997_1.PowerProtectCommand.DISABLE);
+    const disableCmd = commandBuilder.buildPowerProtectCommand(meterAddress, PowerProtectCommand.DISABLE);
     // 5. 查询保电状态
-    const queryCmd = commandBuilder.buildReadCommand(meterAddress, dl645_1997_1.DL645DataId.POWER_PROTECT);
+    const queryCmd = commandBuilder.buildReadCommand(meterAddress, DL645DataId.POWER_PROTECT);
     // 6. 解析保电状态返回帧
     const frameHex = '681234567890AB810100110100019416';
     const frameBuffer = commandBuilder.hexToBuffer(frameHex);
