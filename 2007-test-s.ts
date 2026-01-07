@@ -1,8 +1,8 @@
-import SerialPort from 'serialport';
+import {SerialPort} from 'serialport';
 import DL645_2007, { DL645_2007_DataId } from './dl645-2007'; // 引用你之前的类文件
 
 // 串口配置（根据你的硬件修改）
-const port = new SerialPort('/dev/ttyUSB0', {
+const port = new SerialPort({path:'/dev/ttyUSB0',
   baudRate: 2400,    // DL645-2007 常见波特率
   dataBits: 8,
   parity: 'even',    // 偶校验
